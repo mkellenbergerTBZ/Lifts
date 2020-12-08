@@ -11,6 +11,7 @@ import java.util.*;
  * @version <li> V0.4  18.12.2017 old Version
  * @version <li> V0.5  21.08.2017 Refactoring
  * @version <li> V0.6  06.12.2018 Some enhancements / comments added
+ * @version <li> V0.7  08.12.2020 Fix error: Numbers on floor on exit! >> currentFloorNr deleted!
  * 
  */
 public class Person extends Actor
@@ -29,7 +30,6 @@ public class Person extends Actor
     private Floor currentFloor;  //Points to actual floor if waitung/leaving, otw NULL
     private Lift currentLift;    //Points to actual lift if staying in lift, otw NULL 
     private int destFloorNr;     //Wish to go
-    private int currentFloorNr;  //Where I am
     private int status;          //Counts Status
     /**
      * Standard constructor: not used;
@@ -50,11 +50,11 @@ public class Person extends Actor
         currentFloor = floor;
         status = STAYS_ON_FLOOR;
         
-        currentFloorNr = currentFloor.getFloorNr();
         /*
+        int currentFloorNr = currentFloor.getFloorNr();
         if (currentFloorNr == 3){
             destFloorNr = 2;
-        } else {
+        } else  {
             destFloorNr = 3;// !!! pickRandomFloorNr(building);
         }
         */
@@ -138,8 +138,8 @@ public class Person extends Actor
         } else if (getX() <= XPOS_EXIT) { // Enter lift
             List<Floor> floors = getWorld().getObjects(Floor.class);
             for (Floor floor : floors) {
-                if ( floor.getFloorNr() == currentFloorNr ){ 
-                   //floor.leave(this);             //Remove Person from building and floor
+                if ( floor.getFloorNr() == currentFloor.getFloorNr() ){ 
+                   floor.leave(this);             //Remove Person from building and floor
                    getWorld().removeObject(this);
                 }
 
@@ -162,7 +162,7 @@ public class Person extends Actor
      */
     public boolean isGoingup()
     {
-        return (destFloorNr > currentFloorNr) && (status < LEAVE_LIFT );
+        return (destFloorNr >  currentFloor.getFloorNr()) && (status < LEAVE_LIFT );
     }
     /**
      * Return whether or not we want to go down.
@@ -171,7 +171,7 @@ public class Person extends Actor
      */
     public boolean isGoingdown()
     {
-        return (destFloorNr < currentFloorNr) && (status < LEAVE_LIFT );
+        return (destFloorNr <  currentFloor.getFloorNr()) && (status < LEAVE_LIFT );
     }
 
     /**
@@ -183,7 +183,7 @@ public class Person extends Actor
         int floorNr;
         do {
             floorNr = random.nextInt(Building.DEFAULT_FLOORS);
-        } while (floorNr == currentFloorNr);
+        } while (floorNr ==  currentFloor.getFloorNr());
         return floorNr;
     }
     

@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=Person
-comment0.text=\r\n\ Lift\ simulation\:\ Person\ will\ be\ set\ on\ floor\ (via\ constructir),\ moves\ to\ lift\ or\ leaves\ floor.\r\n\ \r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.1\ \ (Beta)\r\n\ @version\ <li>\ V0.2\ \ 17.12.2017\ Status\ LEAVE_FLOOR\ added\r\n\ @version\ <li>\ V0.3\ \ 18.12.2017\ Error\ status-call\ solved\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ @version\ <li>\ V0.6\ \ 06.12.2018\ Some\ enhancements\ /\ comments\ added\r\n\ \r\n
+comment0.text=\r\n\ Lift\ simulation\:\ Person\ will\ be\ set\ on\ floor\ (via\ constructir),\ moves\ to\ lift\ or\ leaves\ floor.\r\n\ \r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.1\ \ (Beta)\r\n\ @version\ <li>\ V0.2\ \ 17.12.2017\ Status\ LEAVE_FLOOR\ added\r\n\ @version\ <li>\ V0.3\ \ 18.12.2017\ Error\ status-call\ solved\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ @version\ <li>\ V0.6\ \ 06.12.2018\ Some\ enhancements\ /\ comments\ added\r\n\ @version\ <li>\ V0.7\ \ 08.12.2020\ Fix\ error\:\ Numbers\ on\ floor\ on\ exit\!\ >>\ currentFloorNr\ deleted\!\r\n\ \r\n
 comment1.params=
 comment1.target=Person()
 comment1.text=\r\n\ Standard\ constructor\:\ not\ used;\r\n

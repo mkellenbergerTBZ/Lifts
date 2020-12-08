@@ -125,7 +125,7 @@ public class Floor extends Actor
     {
         people.add(p);
         paintFloorPopUp(getImage()); // show up again         
-        return getY()+10; // Pass correct position for nes location
+        return getY()+10; // Pass correct position for next location
     }
     
     /**
@@ -161,11 +161,11 @@ public class Floor extends Actor
            // get all persons into lift with same directions
            if (p.isGoingup() && lift.getDirection() == Buttons.UP) { 
                p.enterLift(lift);
-               it.remove(); 
+               it.remove(); // Remove from people list
                paintFloorPopUp(getImage());
            } else if (p.isGoingdown() && lift.getDirection() == Buttons.DOWN) {
                p.enterLift(lift);
-               it.remove();
+               it.remove(); // Remove from people list
                paintFloorPopUp(getImage());
            }
         }
