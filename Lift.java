@@ -8,7 +8,9 @@ import javax.swing.ImageIcon;
  * @author KEL
  * @version <li> V0.4  18.12.2017 old Version
  * @version <li> V0.5  21.08.2017 Refactoring
- * @version <li> V0.6  30.08.2017 Liftcontrolling 
+ * @version <li> V0.6  30.08.2017 Liftcontrolling
+ * @version <li> V0.7  08.12.2020 !!! Errors to fix: Persons on edge floor are left out 
+ *                                                   Lift is moving without buttons hit
  * 
  */
 
@@ -54,7 +56,7 @@ public class Lift extends Actor
         direction = Buttons.NONE; // No direction jet
         timer = 0;        // Timer ended
         /// currentFloor = atFloor(); // gets current Floor
-        pastFloorNr = 0;  // First storage
+        pastFloorNr = 0;  // First init
         
         // Intiate destination array
         goToDest = new int[Building.DEFAULT_FLOORS];
@@ -123,14 +125,14 @@ public class Lift extends Actor
     private void standingClosed()
     {       
         // Checks to continue in selected destination:
-        if (direction != Buttons.NONE) {
+        if (direction != Buttons.NONE ) {
              start(direction);  
              return;
         }
         
         // Check if any aquisation is left out:
-        for (int checkFloorNr =0; checkFloorNr < Building.DEFAULT_FLOORS; checkFloorNr++) {
-                    int checkDest =getG2Dest(checkFloorNr);
+        for (int checkFloorNr = 0; checkFloorNr < Building.DEFAULT_FLOORS; checkFloorNr++) {
+                    int checkDest = getG2Dest(checkFloorNr);
                     if ( checkDest  > 0 ) {
                         int diff = checkFloorNr - pastFloorNr;
                         if (diff != 0) {
@@ -145,8 +147,8 @@ public class Lift extends Actor
                     }
              }
         
-        // Last Check if one person is missing:
-        if (controller.allClosed()) {
+        // Last Check if one person is missing: !!!
+        /**if (controller.allStopped() && !controller.nonePressed()) {
             for (int checkFloorNr =0; checkFloorNr < Building.DEFAULT_FLOORS; checkFloorNr++) {
                     Floor checkFloor = ((Building)getWorld()).getFloor(checkFloorNr);
                     if ( checkFloor.getButtons()  > Buttons.NONE ) {
@@ -162,7 +164,7 @@ public class Lift extends Actor
     
                     }
              }
-        }
+        }**/
     }
     /**
      *  Act on status: We are currently standing with doors open - perform the next step
@@ -317,7 +319,11 @@ public class Lift extends Actor
               if ((dir == Buttons.UP) && (currentFloor.getFloorNr() == Building.DEFAULT_FLOORS -1)) {
                   direction = Buttons.DOWN;
               } else if ((dir == Buttons.DOWN) && (currentFloor.getFloorNr() == 0)) {
-                  direction = Buttons.UP;
+                  if (controller.nonePressed()) { // If Lift is astray
+                      clearDirection();
+                  } else {
+                     direction = Buttons.UP;
+                  }
               } else {
                   direction = dir;
               }   
@@ -328,6 +334,7 @@ public class Lift extends Actor
      */
     public void clearDirection() {
         direction = Buttons.NONE;
+        status = LIFT_STOPPED;
     }
     /*
      * Resets timer für closing doors

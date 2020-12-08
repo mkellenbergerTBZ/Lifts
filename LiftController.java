@@ -8,6 +8,7 @@ import java.util.*;
  * @author KEL
  * @version <li> V0.4  18.12.2017 old Version
  * @version <li> V0.5  21.08.2017 Refactoring
+ * @version <li> V0.7  12.08.2020 Add floors to get to the buttons
  * 
  */
 public class LiftController 
@@ -15,6 +16,7 @@ public class LiftController
     private static LiftController controller = null;
     private static int liftIndex = 0;
     private Lift[] lift;
+    private Floor[] floor;
     //private int[][] destination; //lift and floors:
 
     private static Random random = new Random();
@@ -25,6 +27,7 @@ public class LiftController
     protected LiftController()
     {
       lift = new Lift[Building.DEFAULT_LIFTS]; 
+      floor = new Floor[Building.DEFAULT_FLOORS]; 
      // destination = new int[Building.DEFAULT_LIFTS][Building.DEFAULT_FLOORS];
     }
     
@@ -46,9 +49,16 @@ public class LiftController
     }
     
     /**
-     * 
+    * Setup: add floor to controller
+    */
+    public void addFloor(int index, Floor fl) {
+        floor[index] = fl;
+    }
+    
+    /**
+     *  Chekcs if all lifts are stopped
      */
-        public boolean allClosed() {
+        public boolean allStopped() {
        // Search for waiting lift at current floor
         for (int li=0; li < Building.DEFAULT_LIFTS; li++) {
            if ((lift[li].getStatus() != Lift.LIFT_STOPPED)) {
@@ -57,6 +67,20 @@ public class LiftController
        }
        return true;
     }
+    
+      
+    /**
+     * Chekc if all buttons are releases
+     */
+        public boolean nonePressed() {
+       // Search for waiting lift at current floor
+        for (int fl=0; fl < Building.DEFAULT_FLOORS; fl++) {
+           if ((floor[fl].getButtons() != Buttons.NONE)) {
+               return false ; 
+           }
+       }
+       return true;
+    }  
     /**
      * Aquires any Lift for certain floorNr and direction (UP / DOWN)
      */

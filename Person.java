@@ -50,14 +50,6 @@ public class Person extends Actor
         currentFloor = floor;
         status = STAYS_ON_FLOOR;
         
-        /*
-        int currentFloorNr = currentFloor.getFloorNr();
-        if (currentFloorNr == 3){
-            destFloorNr = 2;
-        } else  {
-            destFloorNr = 3;// !!! pickRandomFloorNr(building);
-        }
-        */
         destFloorNr = pickRandomFloorNR();
         if(isGoingup()) {
             currentFloor.pushButton(Buttons.UP);

@@ -63,6 +63,7 @@ public class Building extends World
         for(int i=0; i<numberOfFloors; i++) {
             floors[i] = new Floor(i);
             addObject(floors[i], 100, (numberOfFloors-1-i) * 72 + 55);
+            controller.addFloor(i, floors[i]);
         }
     }
     /**
