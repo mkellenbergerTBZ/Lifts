@@ -1,0 +1,25 @@
+#BlueJ class context
+comment0.target=LiftController
+comment0.text=\r\n\ Lift\ simulation\:\ LiftController\r\n\ \r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ \r\n
+comment1.params=
+comment1.target=LiftController()
+comment1.text=\r\n\ Singleton\:\ There\ will\ be\ only\ ONE\ LiftController\r\n
+comment2.params=
+comment2.target=LiftController\ getInstance()
+comment2.text=\r\n\ Gets\ THE\ instance\ of\ a\ liftcontroller.\r\n
+comment3.params=index\ li
+comment3.target=void\ addLift(int,\ Lift)
+comment3.text=\r\n\ Setup\:\ add\ lift\ to\ controller\r\n
+comment4.params=
+comment4.target=boolean\ allClosed()
+comment4.text=\r\n\ \r\n
+comment5.params=toFloorNr\ direction
+comment5.target=void\ aquireAnyLift(int,\ int)
+comment5.text=\r\n\ Aquires\ any\ Lift\ for\ certain\ floorNr\ and\ direction\ (UP\ /\ DOWN)\r\n
+comment6.params=
+comment6.target=int\ getRandomLiftNr()
+comment6.text=\r\n\ Return\ a\ random\ floor\ number.\r\n
+comment7.params=
+comment7.target=java.util.Random\ getRandomizer()
+comment7.text=\r\n\ A\ method\ that\ when\ called\ returns\ a\ random\ number.\r\n
+numComments=8

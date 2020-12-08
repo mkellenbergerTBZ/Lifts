@@ -1,0 +1,307 @@
+import greenfoot.*;
+import java.util.*;
+import javax.swing.ImageIcon;
+
+/**
+ * Lift simulation: Floor
+ * 
+ * @author KEL
+ * @Version 1.0
+ * 
+ */
+
+public class Lift extends Actor
+{
+    private static final Random randomizer = Building.getRandomizer();
+
+    // Static constants  
+    public static final int LIFT_UP = 0;
+    public static final int LIFT_DOWN = 1;
+    public static final int LIFT_STOPPED = 2;
+    public static final int LIFT_OPEN = 3;
+    
+    private static final int TIMER_END = 250;
+
+    private int status;
+    private int direction;
+    private int pastFloorNr;
+    private int timer; // counts time to close door again. May be restarted be a person entering lift
+    private ArrayList<Person> people; // List of the people currently in the lift
+    private Floor floor; // Set to current serving floor; null if none!
+    private int[] destination; // floors:
+    private LiftController controller; // Connects to controller
+    
+    private GreenfootImage openImage;
+    private GreenfootImage emptyImage;
+    private GreenfootImage closedImage;
+    private GreenfootImage personImage;
+    
+    public Lift() {
+        personImage =  new GreenfootImage("images/person.gif");
+        openImage   =  new GreenfootImage("images/lift-open.jpg");
+        emptyImage  =  new GreenfootImage("images/lift-open.jpg");
+        closedImage =  new GreenfootImage("images/lift-closed.jpg");
+        setImage(closedImage);
+        status = LIFT_STOPPED;
+        direction = 0; // No direction jet
+        timer = 0;
+        pastFloorNr = 0;
+        
+        // Intiate destination array
+        destination = new int[Building.DEFAULT_FLOORS];
+        for (int f=0; f < Building.DEFAULT_FLOORS; f++) {
+          destination[f] = 0; // Reset all destinations of this lift
+        }
+        
+        controller = LiftController.getInstance();
+        people = new ArrayList<Person>();
+    }
+
+    public void act() {
+        floor = atFloor(); // Update floor 
+        switch (status) {
+            case LIFT_UP:     goingUp();        break;
+            case LIFT_DOWN:   goingDown();      break;
+            case LIFT_STOPPED:standingClosed(); break;
+            case LIFT_OPEN:   standingOpen();   break;
+        }
+        if (status == LIFT_OPEN) {
+            timer++;
+        }
+    }
+
+    /**
+     * Return  lift status
+     */
+    public int getStatus() {
+        return status;
+    }
+    
+    /**
+     * Return direction status
+     */
+    public int getDir() {
+        return direction;
+    }
+    
+    public void restartTimer() {
+        timer = 0;    
+    }
+   
+    /**
+     * Open the lift doors.
+     */
+    public void openDoors(int directions) {
+        setImage(openImage);
+        status = LIFT_OPEN;
+        updateImage();
+        
+        // Replacment for for-loop (-> it.remove() element in loop!)
+        Person p;
+        Iterator<Person> it = people.iterator();
+        //Check if persons want to leave
+        while (it.hasNext()) {
+            p = it.next();
+            if (p.getDestFloorNr() == floor.getFloorNr()) {
+                p.leaveLift(floor); // Leave onto destination floor
+                it.remove();        // Go out of lift
+                updateImage();           
+                destination[pastFloorNr] = 0; // all out
+            }
+        }
+        floor.liftArrived(this);
+    }
+    
+    /*
+     * Checks wether person wants to get out at floor
+     */
+    public boolean wantOut() {
+        if (status == LIFT_STOPPED) {
+            //return destination[pastFloorNr] > 0; !!!
+          
+            // Replacment for for-loop (-> it.remove() element in loop!)
+            Person p;
+            Iterator<Person> it = people.iterator();
+            //Check if persons want to leave
+            while (it.hasNext()) {
+                p = it.next();
+                if (p.getDestFloorNr() == pastFloorNr) return true;
+            }
+            return false;
+        } else  {
+            return false;
+        }
+    }
+    
+    /**
+     * Increments destination on certain floor
+     */
+    public void incDest(int flrNr) {
+        destination[flrNr]++;
+    }
+    
+    /**
+     * Gets destination amount on certain floor
+     */
+    public int getDest(int flrNr) {
+        return destination[flrNr];
+    }
+    
+    /**
+     * Close the lift doors.
+     */
+    public void closeDoors() {
+        setImage(closedImage);
+        status = LIFT_STOPPED;
+    }
+
+        /**
+     * Are we at a floor? Return floor or null.
+     */
+    public Floor atFloor() {
+        return ((Building)getWorld()).getFloorAt(getY());
+    }
+
+    /**
+     * person goes into Lift
+     */
+    public void goInto(Person person) {
+        people.add(person);
+        updateImage();
+    }
+    
+    /**
+     * Start lift after STOPPED or just set direction correctly
+     */
+    public void start(int dir){
+          // check for turn
+          if ((dir == Buttons.UP) && (floor.getFloorNr() == Building.DEFAULT_FLOORS)) {
+              direction = Buttons.DOWN;
+          } else if ((dir == Buttons.DOWN) && (floor.getFloorNr() == 0)) {
+              direction = Buttons.UP;
+          } else {
+              direction = dir;
+          }   
+          
+          // Go if stopped
+          if (direction == Buttons.UP) {
+              if (status== LIFT_STOPPED) 
+                  status = LIFT_UP;
+            } else if (direction == Buttons.DOWN){
+              if (status != LIFT_STOPPED) 
+                  status = LIFT_DOWN;
+            }
+    }
+
+    /**
+     * Gets last floor past by or currentliy waiting
+     */
+    public int getPastFloorNr(){
+        return pastFloorNr;
+    }
+    
+    
+    /**
+     * Act on status: We are currently going up - perform the next step.
+     */
+    private void goingUp()
+    {
+        moveUp();
+        floor = atFloor();
+        if(floor != null) {
+            pastFloorNr = floor.getFloorNr();
+            if ((floor.getButtons() == 1 || floor.getButtons() == 3)) {
+                openDoors(Buttons.UP);
+                updateImage();
+            }
+            status = LIFT_STOPPED;
+        }
+    }
+
+    /**
+     *  Act on status: We are currently going down - perform the next step.
+     */
+    private void goingDown()
+    {
+        moveDown();
+        floor = atFloor();
+        if(floor != null) {
+            pastFloorNr = floor.getFloorNr();
+            if (floor.getButtons() > 1) {
+                openDoors(Buttons.DOWN);
+                updateImage();
+            }
+            status = LIFT_STOPPED;   
+        }
+    }
+
+    /**
+     *  Act on status: We are currently standing with doors closed - perform the next step.
+     */
+    private void standingClosed()
+    {
+        /*
+         if (wantOut()) {
+            openDoors(direction);
+            updateImage();
+        }
+        */
+        controller.checkFloor(this, direction);
+        
+    }
+
+    /**
+     *  Act on status: We are currently standing with doors open - perform the next step
+     *  when timer elapsed -> close doors!
+     */
+    private void standingOpen() {
+        if(timer == TIMER_END) {
+            timer = 0;
+            closeDoors();
+        }
+    }
+
+    /**
+     * Move a bit up.
+     */
+    private void moveUp() {
+        setLocation(getX(), getY() - 1);
+    }
+    
+    /**
+     * Move a bit down.
+     */
+    private void moveDown() {
+        setLocation(getX(), getY() + 1);
+    }
+          
+    /**
+     * Update this lift's images (open and closed) according to it's state.
+     */
+    private void updateImage()
+    {
+        openImage.drawImage(emptyImage, 0, 0);
+        if(people.size() > 3)
+            openImage.drawImage(personImage, 3, 14);
+        if(people.size() > 0)
+            openImage.drawImage(personImage, 12, 15);
+        if(people.size() > 1)
+            openImage.drawImage(personImage, 5, 22);
+        if(people.size() > 2)
+            openImage.drawImage(personImage, 17, 20);
+        paintNumber(openImage);
+        paintNumber(closedImage);
+    }
+    
+    /**
+     * Paint the number of passengers onto the lift's image.
+     */
+    private void paintNumber(GreenfootImage img)
+    {
+        img.setColor(Color.WHITE);
+        img.fillRect(20, 4, 24, 16);
+        img.setColor(Color.BLACK);
+        img.drawRect(20, 4, 24, 16);
+        img.drawString(Integer.toString(people.size()), 22, 17);
+    }
+}

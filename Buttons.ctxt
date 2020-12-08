@@ -1,0 +1,25 @@
+#BlueJ class context
+comment0.target=Buttons
+comment0.text=\r\n\ Lift\ simulation\:\ There\ are\ two\ buttons\ on\ each\ floor.\ These\ buttans\ are\ modelled\ within\ this\ class\r\n\ \r\n\ Act\:\ Checks\ if\ one\ ore\ both\ are\ pressed\ and\ aquires\ a\ cabine\ in\ either\ direction\r\n\r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ \r\n
+comment1.params=floorNr
+comment1.target=Buttons(int)
+comment1.text=\ \r\n\ Creates\ two\ buttons\ for\ UP\ and\ DOWN\ request\r\n\ \r\n
+comment2.params=
+comment2.target=void\ act()
+comment2.text=\r\n\ Aquires\ (UP-\ or\ DOWN-going)\ lift\ if\ pressed\ \r\n
+comment3.params=dir
+comment3.target=void\ press(int)
+comment3.text=\r\n\ Activate\ one\ button\ in\ certain\ direction\r\n\ @param\ dir\ is\ either\ UP\ or\ DOWN\r\n
+comment4.params=dir
+comment4.target=void\ clear(int)
+comment4.text=\r\n\ Clears\ one\ button\ \r\n\ @param\ dir\ is\ either\ UP\ or\ DOWN\r\n
+comment5.params=direction\ onOff
+comment5.target=void\ set(int,\ boolean)
+comment5.text=\r\n\ Sets\ one\ button\ on\ or\ off\r\n\ @param\ direction\ is\ either\ UP\ or\ DOWN\r\n\ @param\ onoff\ is\ true\ for\ on\r\n
+comment6.params=
+comment6.target=int\ getButtons()
+comment6.text=\r\n\ Gets\ the\ status\ of\ the\ buttons\r\n\ @return\ int\ UP,\ DOWN\ or\ UP_DOWN\ if\ both\ are\ pressed,\ NONE\ if\ none\ is\ pressed\r\n
+comment7.params=
+comment7.target=void\ updateImage()
+comment7.text=\r\n\ Re-Draws\ buttons\r\n
+numComments=8
