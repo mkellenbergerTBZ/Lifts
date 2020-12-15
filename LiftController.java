@@ -81,7 +81,8 @@ public class LiftController
            }
        }
        return true;
-    }  
+    } 
+    
     /**
      * Aquires any Lift for certain floorNr and direction (UP / DOWN)
      */

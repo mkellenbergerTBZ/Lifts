@@ -31,12 +31,14 @@ public class Person extends Actor
     private Lift currentLift;    //Points to actual lift if staying in lift, otw NULL 
     private int destFloorNr;     //Wish to go
     private int status;          //Counts Status
+    
     /**
      * Standard constructor: not used;
      */
     private Person()
     {
     }
+    
     /**
      * Creates person on certain floor (by clicking on the floor)! 
      * Person waits on lift to come ...
@@ -58,6 +60,7 @@ public class Person extends Actor
         } else 
             status = ENTER_LIFT;  // ERROR-Case >> Leave!!!
     }
+    
     /**
      * Act: Animate persons movement
      */
@@ -120,7 +123,7 @@ public class Person extends Actor
        nextStatus();
     }
     
-     /**
+    /**
      * Animates leaving the building.
      */
     private void leaveFloor()
@@ -156,6 +159,7 @@ public class Person extends Actor
     {
         return (destFloorNr >  currentFloor.getFloorNr()) && (status < LEAVE_LIFT );
     }
+    
     /**
      * Return whether or not we want to go down.
      * 

@@ -63,7 +63,7 @@ public class Lift extends Actor
         // Intiate destination array
         goToDest = new int[Building.DEFAULT_FLOORS];
         for (int f=0; f < Building.DEFAULT_FLOORS; f++) {
-          clearG2Dest(f); // Reset all goto-destinations of this lift        
+            clearG2Dest(f); // Reset all goto-destinations of this lift        
         }
         
         controller = LiftController.getInstance();  // Sets the only controller
@@ -107,7 +107,7 @@ public class Lift extends Actor
                 openDoors(Buttons.UP);
                 updateImage();
             }
-           // Check at top
+            // Check at top
             if ((currentFloor.getFloorNr() == Building.DEFAULT_FLOORS-1) && 
                 (butts == Buttons.DOWN)
                ) {
@@ -155,8 +155,8 @@ public class Lift extends Actor
     {       
         // Checks to continue in selected destination:
         if (direction != Buttons.NONE ) {
-             start(direction);  
-             return;
+         start(direction);  
+         return;
         }
         
         // Check if any aquisation is left out:
@@ -172,7 +172,7 @@ public class Lift extends Actor
                     start(dir);
                     return;
                 }
-            }
+        }
         }
         
         idle = true;  // Lift is ready for new guest
@@ -240,7 +240,7 @@ public class Lift extends Actor
 
         //Checks if cabine is empty --> no fix direction
         if (isEmpty()) {
-          direction = Buttons.NONE;  //!!! 
+         direction = Buttons.NONE;  //!!! 
         }
         
         // Check direction bevor and after people possibly entered
@@ -267,7 +267,7 @@ public class Lift extends Actor
         return false;
     }
     
-    /*
+    /**
      * Checks wether person wants to get out at floor
      */
     public boolean wantOut() {
@@ -285,6 +285,7 @@ public class Lift extends Actor
             return false;
         }
     }
+    
     /**
      * Close the lift doors.
      */
@@ -310,17 +311,17 @@ public class Lift extends Actor
      * Start lift after STOPPED or just set direction correctly
      */
     public void start(int dir){
-          //Checks direction first and turns if needed
-          setDirection(dir);
-          
-          // Go if stopped
-          if (direction == Buttons.UP) {
-              if (status == LIFT_STOPPED) 
-                  status = LIFT_UP;
-            } else if (direction == Buttons.DOWN){
-              if (status == LIFT_STOPPED) 
-                  status = LIFT_DOWN;
-            }
+        //Checks direction first and turns if needed
+        setDirection(dir);
+        
+        // Go if stopped
+        if (direction == Buttons.UP) {
+          if (status == LIFT_STOPPED) 
+              status = LIFT_UP;
+        } else if (direction == Buttons.DOWN){
+          if (status == LIFT_STOPPED) 
+              status = LIFT_DOWN;
+        }
     }    
 
     //=====================================================================================
@@ -337,6 +338,7 @@ public class Lift extends Actor
     public int getDirection() {
         return direction;
     }
+    
     /**
      * Sets direction status. Changes direction if reached top or bottom
      * @param dir UP or DOWN
@@ -358,14 +360,16 @@ public class Lift extends Actor
               }   
          }
     }
-    /*
+    
+    /**
      * Clears direction of the lift (if nobody has entered)
      */
     public void clearDirection() {
         direction = Buttons.NONE;
         status = LIFT_STOPPED;
     }
-    /*
+    
+    /**
      * Resets timer für closing doors
      */
     public void restartTimer() {
@@ -379,13 +383,15 @@ public class Lift extends Actor
     public void incG2Dest(int flrNr) {
         goToDest[flrNr]++;
     }
-        /**
-     * Increments destination on certain floor
-     * @param flrNr floor number of set destination
-     */
+    
+    /**
+    * Increments destination on certain floor
+    * @param flrNr floor number of set destination
+    */
     private void decG2Dest(int flrNr) {
         goToDest[flrNr]--;
     }
+    
     /**
      * Gets destination amount on certain floor
      * @param flrNr floor number of set destination
@@ -393,6 +399,7 @@ public class Lift extends Actor
     public int getG2Dest(int flrNr) {
         return goToDest[flrNr];
     }
+    
     /**
      * Sets destination amount on certain floor
      * @param flrNr floor number of set destination
@@ -402,12 +409,12 @@ public class Lift extends Actor
     }
     
     
-   /**
-   * Are we at a floor? Return floor or null.
-   */
-   public Floor atFloor() {
+    /**
+    * Are we at a floor? Return floor or null.
+    */
+    public Floor atFloor() {
        return ((Building)getWorld()).getFloorAt(getY());
-   }
+    }
     
     /**
      * Gets last floor past by or currentliy waiting
@@ -446,9 +453,10 @@ public class Lift extends Actor
             openImage.drawImage(personImage, 17, 20);
         paintNumber(openImage);
         paintNumber(closedImage);
-        paintDebug( openImage );
-        paintDebug( closedImage );
+        //paintDebug( openImage );
+        //paintDebug( closedImage );
     }
+    
     /**
      * Paint the number of passengers onto the lift's image.
      * @param img This Image  will be updated with a passengernumber
@@ -467,6 +475,7 @@ public class Lift extends Actor
         }
 
     }
+    
     /**
      * Paint the number of debug Info onto the lift's image.
      * @param img This Image will be updated with a debug info (red)

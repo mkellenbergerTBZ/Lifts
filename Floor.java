@@ -33,6 +33,7 @@ public class Floor extends Actor
         people = new ArrayList<Person>();
         controller = LiftController.getInstance();
     }
+    
     /**
     *  Adds floor and Bottons to the world
     */
@@ -51,6 +52,7 @@ public class Floor extends Actor
         checkMouseClick();
         paintFloorPopUp(getImage());
     }
+    
     /**
      * Click on floor adds a new person with target floor.
      */
@@ -63,6 +65,7 @@ public class Floor extends Actor
             people.add(p); // Puts person on floor --> pushButton
         }
     }
+    
     /**
     * Marks the amount of people waiting at the current floor.
     */
@@ -76,7 +79,6 @@ public class Floor extends Actor
     }    
     
     //====================================================================================
-    
     
     /**
     * Return this floor's number.
@@ -111,7 +113,6 @@ public class Floor extends Actor
     public int getButtons() {
         return buttons.getButtons();
     }
-    
     
     /**
      * Enters this floor's from lift.

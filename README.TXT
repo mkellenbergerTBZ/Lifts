@@ -28,10 +28,19 @@ Version 0.2: concurrent Error solved with Iterator
 Version 0.3: got Lift done, Enter lift done, exit floor
 
 21.12.2017
-Version 0.4 leave redone 
+Version 0.4: leave redone 
 
 27.08.2018
-Version 0.5 try to solve lift aquire, some bugs when too many people
+Version 0.5: try to solve lift aquire, some bugs when too many people
 
 30.08.2018
-Version 0.6 main bugs solved, some rare misbehavior when running too long
+Version 0.6: main bugs solved, some rare misbehavior when running too long
+
+08.12.2020 
+Version 0.7: Fix error: Numbers on floor on exit! >> currentFloorNr deleted!
+
+12.12.2020 
+Version 0.8: fixed: While going up an empty - not stopping for oposite direction
+
+12.12.2020 
+Version 0.9: Fixed: Not nearest lift is aquired!

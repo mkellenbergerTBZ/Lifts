@@ -32,6 +32,7 @@ public class Building extends World
     {
         this(DEFAULT_FLOORS, DEFAULT_LIFTS);
     }
+    
     /**
      * Constructor:
      * Create a building with specified number of lifts and stories. This creates a world size based on the number of lifts and stories of the building.
@@ -52,6 +53,7 @@ public class Building extends World
         createFloors(floors);
         createLifts(lifts, floors);
     }
+    
     /**
      * Create all the floors in the building.
      *
@@ -66,6 +68,7 @@ public class Building extends World
             controller.addFloor(i, floors[i]);
         }
     }
+    
     /**
      * Create all the lifts in the building.
      *
@@ -131,6 +134,7 @@ public class Building extends World
         }
         return null;
     }
+    
     /**
      * Return the floor at given number
      * 
