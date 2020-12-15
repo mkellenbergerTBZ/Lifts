@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=Lift
-comment0.text=\r\n\ Lift\ simulation\:\ Floor\r\n\ \r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ @version\ <li>\ V0.6\ \ 30.08.2017\ Liftcontrolling\r\n\ @version\ <li>\ V0.7\ \ 08.12.2020\ \!\!\!\ Errors\ to\ fix\:\ Persons\ on\ edge\ floor\ are\ left\ out\ \r\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Lift\ is\ moving\ without\ buttons\ hit\r\n\ \r\n
+comment0.text=\r\n\ Lift\ simulation\:\ Floor\r\n\ \r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ @version\ <li>\ V0.6\ \ 30.08.2017\ Liftcontrolling\r\n\ @version\ <li>\ V0.7\ \ 12.12.2020\ fixed\:\ Persons\ on\ edge\ floor\ are\ left\ out\ \r\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Lift\ is\ moving\ without\ buttons\ hit\r\n\ @version\ <li>\ V0.8\ \ 12.12.2020\ Erros\:\ While\ going\ up\ an\ empty\ -\ not\ stopping\ for\ oposite\ direction\r\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Not\ nearest\ lift\ is\ aquired\!\r\n
 comment1.params=
 comment1.target=Lift()
 comment1.text=\r\n\ Creates\ and\ initializes\ Lift\ cabine\:\r\n\ Reset\ of\ all\ properties\r\n\ Connects\ to\ only\ controller\r\n\ Sets\ space\ fpr\ passenger\ and\ destination\r\n

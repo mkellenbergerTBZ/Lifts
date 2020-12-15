@@ -9,9 +9,10 @@ import javax.swing.ImageIcon;
  * @version <li> V0.4  18.12.2017 old Version
  * @version <li> V0.5  21.08.2017 Refactoring
  * @version <li> V0.6  30.08.2017 Liftcontrolling
- * @version <li> V0.7  08.12.2020 !!! Errors to fix: Persons on edge floor are left out 
- *                                                   Lift is moving without buttons hit
- * 
+ * @version <li> V0.7  12.12.2020 fixed: Persons on edge floor are left out 
+ *                                       Lift is moving without buttons hit
+ * @version <li> V0.8  12.12.2020 Erros: While going up an empty - not stopping for oposite direction
+ *                                       Not nearest lift is aquired!
  */
 
 public class Lift extends Actor
@@ -19,14 +20,14 @@ public class Lift extends Actor
     private static final Random random = Building.getRandomizer();
 
     // Static constants  
-    public static final int LIFT_STOPPED = 0;
-    public static final int LIFT_UP = 1;
-    public static final int LIFT_DOWN = 2;
-    public static final int LIFT_OPEN = -1;
+    public static final int LIFT_STOPPED = 0; //Cabine is waiting w closed Door
+    public static final int LIFT_UP = 1;      //Cabine is going up from floor to floor
+    public static final int LIFT_DOWN = 2;    //Cabine is going down from floor to floor
+    public static final int LIFT_OPEN = -1;   //Cabine is waiting w open Door
     
-    private static final int TIMER_END = 250;
+    private static final int TIMER_END = 250; // CountDownTimer to close door
 
-    private int status;      // Saves statu:s see above
+    private int status;      // Saves status: see above
     private int direction;   // sets directins according to buttons set
     private int pastFloorNr; // Saves past floor number for quick access or test while moving
     private int timer;       // counts time to close door again. May be restarted be a person entering lift
@@ -35,7 +36,7 @@ public class Lift extends Actor
     private int[] goToDest;            // Saves all Destination to go in the lift
     private LiftController controller; // Connects to controller
     
-    private GreenfootImage openImage;
+    private GreenfootImage openImage;  // Cabine images
     private GreenfootImage emptyImage;
     private GreenfootImage closedImage;
     private GreenfootImage personImage;
@@ -93,12 +94,24 @@ public class Lift extends Actor
         if(currentFloor != null) { // now standing at a certain floor
             status = LIFT_STOPPED;
             pastFloorNr = currentFloor.getFloorNr(); // to look back
-            //Check if correct button is set or anybody wants out -> open            
-            if ((currentFloor.getButtons() == Buttons.UP) || (currentFloor.getButtons() == Buttons.UP_DOWN) || wantOut() 
-                 || isFirst() ) {
+            
+            //Check if correct button is set or anybody wants out -> open
+            int butts = currentFloor.getButtons(); // gets status of buttons
+            // Check while going further up
+            if ((butts == Buttons.UP) || 
+                (butts == Buttons.UP_DOWN) || 
+                 wantOut() || 
+                 isFirst() 
+                ) {
                 openDoors(Buttons.UP);
                 updateImage();
             }
+           // Check at top
+            if ((currentFloor.getFloorNr() == Building.DEFAULT_FLOORS-1) && (butts == Buttons.DOWN)) {
+                openDoors(Buttons.UP);
+                updateImage(); 
+            }
+            
         }
     }
     /**
@@ -111,12 +124,23 @@ public class Lift extends Actor
         if(currentFloor != null) { // now standing at a certain floor
             status = LIFT_STOPPED; 
             pastFloorNr = currentFloor.getFloorNr(); // to look back
+            
             //Check if correct button is set or anybody wants out -> open
-            if ((currentFloor.getButtons() == Buttons.DOWN) || (currentFloor.getButtons() == Buttons.UP_DOWN) || wantOut() 
-                 || isFirst() ) {
+            int butts = currentFloor.getButtons(); // gets status of buttons
+            // Check while going further down
+            if ((butts == Buttons.DOWN) ||
+                (butts == Buttons.UP_DOWN) ||
+                 wantOut() ||
+                 isFirst() 
+               ) {
                 openDoors(Buttons.DOWN);
                 updateImage(); 
-            }  
+            }
+            // Check at buttom
+            if ((currentFloor.getFloorNr() == 0) && (butts == Buttons.UP)){
+                openDoors(Buttons.UP);
+                updateImage(); 
+            }
         }
     }
     /**
@@ -373,12 +397,13 @@ public class Lift extends Actor
     }
     
     
-    /**
-     * Are we at a floor? Return floor or null.
-     */
-    public Floor atFloor() {
-        return ((Building)getWorld()).getFloorAt(getY());
-    }
+   /**
+   * Are we at a floor? Return floor or null.
+   */
+   public Floor atFloor() {
+       return ((Building)getWorld()).getFloorAt(getY());
+   }
+    
     /**
      * Gets last floor past by or currentliy waiting
      */
