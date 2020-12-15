@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
  * @version <li> V0.6  30.08.2017 Liftcontrolling
  * @version <li> V0.7  12.12.2020 fixed: Persons on edge floor are left out 
  *                                       Lift is moving without buttons hit
- * @version <li> V0.8  12.12.2020 Erros: While going up an empty - not stopping for oposite direction
+ * @version <li> V0.8  12.12.2020 fixed: While going up an empty - not stopping for oposite direction
  *                                       Not nearest lift is aquired!
  */
 
@@ -35,6 +35,7 @@ public class Lift extends Actor
     private Floor currentFloor;        // Set to current serving floor; null if none!
     private int[] goToDest;            // Saves all Destination to go in the lift
     private LiftController controller; // Connects to controller
+    private boolean idle;              // status for idle
     
     private GreenfootImage openImage;  // Cabine images
     private GreenfootImage emptyImage;
@@ -58,6 +59,7 @@ public class Lift extends Actor
         timer = 0;        // Timer ended
         /// currentFloor = atFloor(); // gets current Floor
         pastFloorNr = 0;  // First init
+        idle = true;      // no aquirement
         
         // Intiate destination array
         goToDest = new int[Building.DEFAULT_FLOORS];
@@ -101,14 +103,16 @@ public class Lift extends Actor
             if ((butts == Buttons.UP) || 
                 (butts == Buttons.UP_DOWN) || 
                  wantOut() || 
-                 isFirst() 
+                 isFirst(butts) 
                 ) {
                 openDoors(Buttons.UP);
                 updateImage();
             }
            // Check at top
-            if ((currentFloor.getFloorNr() == Building.DEFAULT_FLOORS-1) && (butts == Buttons.DOWN)) {
-                openDoors(Buttons.UP);
+            if ((currentFloor.getFloorNr() == Building.DEFAULT_FLOORS-1) && 
+                (butts == Buttons.DOWN)
+               ) {
+                openDoors(Buttons.DOWN);
                 updateImage(); 
             }
             
@@ -131,13 +135,15 @@ public class Lift extends Actor
             if ((butts == Buttons.DOWN) ||
                 (butts == Buttons.UP_DOWN) ||
                  wantOut() ||
-                 isFirst() 
+                 isFirst(butts) 
                ) {
                 openDoors(Buttons.DOWN);
                 updateImage(); 
             }
             // Check at buttom
-            if ((currentFloor.getFloorNr() == 0) && (butts == Buttons.UP)){
+            if ((currentFloor.getFloorNr() == 0) && 
+                (butts == Buttons.UP)
+               ){
                 openDoors(Buttons.UP);
                 updateImage(); 
             }
@@ -156,21 +162,22 @@ public class Lift extends Actor
         
         // Check if any aquisation is left out:
         for (int checkFloorNr = 0; checkFloorNr < Building.DEFAULT_FLOORS; checkFloorNr++) {
-                    int checkDest = getG2Dest(checkFloorNr);
-                    if ( checkDest  > 0 ) {
-                        int diff = checkFloorNr - pastFloorNr;
-                        if (diff != 0) {
-                            int dir = Buttons.DOWN;
-                            if (diff > 0) {
-                                dir = Buttons.UP;
-                            } 
-                            start(dir);
-                            return;
-                        }
-    
-                    }
-             }
+            int checkDest = getG2Dest(checkFloorNr);
+            if ( checkDest  > 0 ) {
+                int diff = checkFloorNr - pastFloorNr;
+                if (diff != 0) {
+                    int dir = Buttons.DOWN;
+                    if (diff > 0) {
+                        dir = Buttons.UP;
+                    } 
+                    start(dir);
+                    return;
+                }
+            }
+        }
         
+        idle = true;  // Lift is ready for new guest
+         
         // Last Check if one person is missing: !!!
         /**if (controller.allStopped() && !controller.nonePressed()) {
             for (int checkFloorNr =0; checkFloorNr < Building.DEFAULT_FLOORS; checkFloorNr++) {
@@ -243,22 +250,20 @@ public class Lift extends Actor
         currentFloor.liftArrived(this);   
     }
     /**
-     * 
+     *  Checks amount of people in lift
+     *  @return true if no people reside in lift
      */
     public boolean isEmpty() {
         return people.isEmpty();
     }
+    
     /**
-     * 
+     * Checks if lift is idle and any buttons are pressed at floor
+     * @return true lift is valued idle
      */
-    public boolean isFirst() {
-        if (people.isEmpty()) {
-            for (int f=0; f < Building.DEFAULT_FLOORS; f++) {
-                  if (getG2Dest(f) > 0) {
-                      return false;    
-                  };    
-            }
-            return (currentFloor.getButtons() != Buttons.NONE);
+    public boolean isFirst(int butts) {
+        if (idle) {
+            return (butts != Buttons.NONE);
         }
         return false;
     }
@@ -297,6 +302,7 @@ public class Lift extends Actor
      * person goes into Lift
      */
     public void goInto(Person person) {
+        idle = false;
         people.add(person);
         updateImage();
     }
@@ -378,7 +384,7 @@ public class Lift extends Actor
      * Increments destination on certain floor
      * @param flrNr floor number of set destination
      */
-    public void decG2Dest(int flrNr) {
+    private void decG2Dest(int flrNr) {
         goToDest[flrNr]--;
     }
     /**
@@ -441,8 +447,8 @@ public class Lift extends Actor
             openImage.drawImage(personImage, 17, 20);
         paintNumber(openImage);
         paintNumber(closedImage);
-        //paintDebug( openImage );
-        //paintDebug( closedImage );
+        paintDebug( openImage );
+        paintDebug( closedImage );
     }
     /**
      * Paint the number of passengers onto the lift's image.
@@ -472,13 +478,18 @@ public class Lift extends Actor
         img.fillRect(20, 20, 24, 16);
         img.setColor(Color.RED);
         img.drawRect(20, 20, 24, 16);
-
-        switch (status) {
+        
+        if (idle) {
+            img.drawString(" *", 22, 32);
+        } else {
+            img.drawString(" !", 22, 32);
+        }
+        /** switch (status) {
              case LIFT_UP:      img.drawString(" ^", 22, 32); break;
              case LIFT_DOWN:    img.drawString(" v", 22, 32); break;
              case LIFT_STOPPED: img.drawString(" -", 22, 32); break;
              case LIFT_OPEN:    img.drawString("<->", 22, 32); break;
-        }
+        }**/
     }
 }   
     
