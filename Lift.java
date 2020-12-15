@@ -12,7 +12,6 @@ import javax.swing.ImageIcon;
  * @version <li> V0.7  12.12.2020 fixed: Persons on edge floor are left out 
  *                                       Lift is moving without buttons hit
  * @version <li> V0.8  12.12.2020 fixed: While going up an empty - not stopping for oposite direction
- *                                       Not nearest lift is aquired!
  */
 
 public class Lift extends Actor

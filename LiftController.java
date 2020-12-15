@@ -9,6 +9,7 @@ import java.util.*;
  * @version <li> V0.4  18.12.2017 old Version
  * @version <li> V0.5  21.08.2017 Refactoring
  * @version <li> V0.7  12.08.2020 Add floors to get to the buttons
+ * @version <li> V0.9  12.12.2020 Fixed: Not nearest lift is aquired!
  * 
  */
 public class LiftController 
@@ -112,25 +113,39 @@ public class LiftController
                return;  // no further searching
            }
        }
-       
-       // Find next stopped lift
+                  
+       // Find next stopped and nearest lift
+       int diffLift;                         // store distance
+       int minDiff=Building.DEFAULT_FLOORS;   // find minimal distance
+       int nLift=0;                           // narest Lift
        for (int li=0; li < Building.DEFAULT_LIFTS; li++) {
+           //search for nearest closed lift 
            if (lift[li].getStatus() == Lift.LIFT_STOPPED) {
-              int diff = toFloorNr - lift[li].getPastFloorNr();
-              if (diff > 0) {
-                   lift[li].incG2Dest(toFloorNr);
-                   lift[li].start(Buttons.UP);
-                   return;  // no further searching
-               }
-              if (diff <0) {
-                   lift[li].incG2Dest(toFloorNr);
-                   lift[li].start(Buttons.DOWN);
-                   return;  // no further searching
+              diffLift = toFloorNr - lift[li].getPastFloorNr();
+              if (Math.abs(diffLift) < Math.abs(minDiff)){ // there are + and - values!!
+                  // if this lift is nearer -> store it
+                  minDiff = diffLift;
+                  nLift = li;
               }
            }
        }
-       // Set first Lift for destination
-       lift[1].incG2Dest(toFloorNr);
+       // chose nearest lift
+       if (lift[nLift].getStatus() == Lift.LIFT_STOPPED) {
+          if (minDiff > 0) {
+               lift[nLift].incG2Dest(toFloorNr);
+               lift[nLift].start(Buttons.UP);
+               return;  // no further searching
+           }
+          if (minDiff <0) {
+               lift[nLift].incG2Dest(toFloorNr);
+               lift[nLift].start(Buttons.DOWN);
+               return;  // no further searching
+          }
+           
+       }
+
+       // Set first Lift for destination (This should not happen!!!)
+       lift[0].incG2Dest(toFloorNr);
        return;
     }
     

@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=LiftController
-comment0.text=\r\n\ Lift\ simulation\:\ LiftController\r\n\ \r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ @version\ <li>\ V0.7\ \ 12.08.2020\ Add\ floors\ to\ get\ to\ the\ buttons\r\n\ \r\n
+comment0.text=\r\n\ Lift\ simulation\:\ LiftController\r\n\ \r\n\ @author\ KEL\r\n\ @version\ <li>\ V0.4\ \ 18.12.2017\ old\ Version\r\n\ @version\ <li>\ V0.5\ \ 21.08.2017\ Refactoring\r\n\ @version\ <li>\ V0.7\ \ 12.08.2020\ Add\ floors\ to\ get\ to\ the\ buttons\r\n\ @version\ <li>\ V0.9\ \ 12.12.2020\ Fixed\:\ Not\ nearest\ lift\ is\ aquired\!\r\n\ \r\n
 comment1.params=
 comment1.target=LiftController()
 comment1.text=\r\n\ Singleton\:\ There\ will\ be\ only\ ONE\ LiftController\r\n
