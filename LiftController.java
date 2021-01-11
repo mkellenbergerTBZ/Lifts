@@ -44,6 +44,8 @@ public class LiftController
    
     /**
     * Setup: add lift to controller
+    * 
+    * 
     */
     public void addLift(int index, Lift li) {
         lift[index] = li;
@@ -71,7 +73,7 @@ public class LiftController
     
       
     /**
-     * Chekc if all buttons are releases
+     * Check if all buttons are releases
      */
         public boolean nonePressed() {
        // Search for waiting lift at current floor

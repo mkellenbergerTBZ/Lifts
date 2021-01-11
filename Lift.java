@@ -35,6 +35,7 @@ public class Lift extends Actor
     private int[] goToDest;            // Saves all Destination to go in the lift
     private LiftController controller; // Connects to controller
     private boolean idle;              // status for idle
+    private int emptyCounter;          // counts floor moves to avoid endless moves because of person enter wrong lift
     
     private GreenfootImage openImage;  // Cabine images
     private GreenfootImage emptyImage;
@@ -59,6 +60,7 @@ public class Lift extends Actor
         /// currentFloor = atFloor(); // gets current Floor
         pastFloorNr = 0;  // First init
         idle = true;      // no aquirement
+        emptyCounter = 0; // start counting
         
         // Intiate destination array
         goToDest = new int[Building.DEFAULT_FLOORS];
@@ -93,6 +95,7 @@ public class Lift extends Actor
         moveUp();
         currentFloor = atFloor();
         if(currentFloor != null) { // now standing at a certain floor
+            emptyCounter++;
             status = LIFT_STOPPED;
             pastFloorNr = currentFloor.getFloorNr(); // to look back
             
@@ -117,6 +120,7 @@ public class Lift extends Actor
             
         }
     }
+    
     /**
      *  Act on status: We are currently going down - perform the next step.
      */
@@ -126,6 +130,7 @@ public class Lift extends Actor
         currentFloor = atFloor();
         if(currentFloor != null) { // now standing at a certain floor
             status = LIFT_STOPPED; 
+            emptyCounter++;
             pastFloorNr = currentFloor.getFloorNr(); // to look back
             
             //Check if correct button is set or anybody wants out -> open
@@ -153,11 +158,12 @@ public class Lift extends Actor
      */
     private void standingClosed()
     {       
+        
         // Checks to continue in selected destination:
         if (direction != Buttons.NONE ) {
          start(direction);  
          return;
-        }
+        } 
         
         // Check if any aquisation is left out:
         for (int checkFloorNr = 0; checkFloorNr < Building.DEFAULT_FLOORS; checkFloorNr++) {
@@ -172,7 +178,7 @@ public class Lift extends Actor
                     start(dir);
                     return;
                 }
-        }
+            }
         }
         
         idle = true;  // Lift is ready for new guest
@@ -229,6 +235,7 @@ public class Lift extends Actor
                 p.leaveLift(currentFloor); // Leave onto destination floor
                 decG2Dest(currentFloor.getFloorNr()); // Decrements stored value
                 it.remove();        // Go out of lift
+                emptyCounter = 0;
                 updateImage();  
             }
         }
@@ -322,6 +329,14 @@ public class Lift extends Actor
           if (status == LIFT_STOPPED) 
               status = LIFT_DOWN;
         }
+        
+        // Stops lift if it still runs
+        if (emptyCounter > 12) {
+          clearDirection();
+          idle = true;
+          emptyCounter = 0;
+        }
+    
     }    
 
     //=====================================================================================
@@ -353,7 +368,7 @@ public class Lift extends Actor
                   if (controller.nonePressed()) { // If Lift is astray
                       clearDirection();
                   } else {
-                     direction = Buttons.UP;
+                      direction = Buttons.UP;
                   }
               } else {
                   direction = dir;
@@ -389,7 +404,10 @@ public class Lift extends Actor
     * @param flrNr floor number of set destination
     */
     private void decG2Dest(int flrNr) {
-        goToDest[flrNr]--;
+        
+        if (goToDest[flrNr] > 0) {
+            goToDest[flrNr]--;
+        }
     }
     
     /**
@@ -453,8 +471,8 @@ public class Lift extends Actor
             openImage.drawImage(personImage, 17, 20);
         paintNumber(openImage);
         paintNumber(closedImage);
-        //paintDebug( openImage );
-        //paintDebug( closedImage );
+        paintDebug( openImage );
+        paintDebug( closedImage );
     }
     
     /**
@@ -473,7 +491,6 @@ public class Lift extends Actor
              case LIFT_DOWN:    img.drawString("v " + Integer.toString(people.size()), 22, 17); break;
              case LIFT_STOPPED: img.drawString("- " + Integer.toString(people.size()), 22, 17); break;
         }
-
     }
     
     /**
@@ -487,12 +504,15 @@ public class Lift extends Actor
         img.setColor(Color.RED);
         img.drawRect(20, 20, 24, 16);
         
+        img.drawString(String.valueOf(emptyCounter), 22, 32);
+
+        /**
         if (idle) {
             img.drawString(" *", 22, 32);
         } else {
             img.drawString(" !", 22, 32);
         }
-        /** switch (status) {
+         switch (status) {
              case LIFT_UP:      img.drawString(" ^", 22, 32); break;
              case LIFT_DOWN:    img.drawString(" v", 22, 32); break;
              case LIFT_STOPPED: img.drawString(" -", 22, 32); break;
