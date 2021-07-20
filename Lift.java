@@ -385,7 +385,7 @@ public class Lift extends Actor
     }
     
     /**
-     * Resets timer für closing doors
+     * Resets timer fï¿½r closing doors
      */
     public void restartTimer() {
         timer = 0;    
@@ -471,8 +471,10 @@ public class Lift extends Actor
             openImage.drawImage(personImage, 17, 20);
         paintNumber(openImage);
         paintNumber(closedImage);
-        paintDebug( openImage );
-        paintDebug( closedImage );
+        
+        // Include or exclude red debugging info on Lift
+        //paintDebug( openImage );
+        //paintDebug( closedImage );
     }
     
     /**
