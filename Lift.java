@@ -275,8 +275,9 @@ public class Lift extends Actor
     }
     
     /**
-     * Checks wether person wants to get out at floor
-     */
+    * Checks wether person wants to get out at floor
+    * @return true lift is valued idleif somebody wants to get out
+    */
     public boolean wantOut() {
         if (status == LIFT_STOPPED) {             
             // Replacment for for-loop (-> it.remove() element in loop!)
@@ -385,7 +386,7 @@ public class Lift extends Actor
     }
     
     /**
-     * Resets timer f�r closing doors
+     * Resets timer for closing doors
      */
     public void restartTimer() {
         timer = 0;    
